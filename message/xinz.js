@@ -608,6 +608,22 @@ module.exports = async(xinz, msg, smsg, blocked, _afk, welcome) => {
         // Auto Read
         xinz.chatRead(from, "read")
 		
+		//status
+                let totalchat = await xinz.chats.all()
+				let i = []
+				let giid = []
+				for (let mem of totalchat){
+					i.push(mem.jid)
+				}
+				for (let id of i){
+					if (id && id.includes('g.us')){
+						giid.push(id)
+					}
+				}
+	       const jumlahCommand = require('util').inspect(hit.all)
+           const jumlahHarian = require('util').inspect(hit.today)
+           await xinz.setStatus(`Time ${time}||HIT TODAY: ${jumlahHarian} HIT ALL: ${jumlahCommand}||RUNTIME: ${runtime(process.uptime())}`)
+
         // CMD
         if (isCmd && !isGroup && !isBaileys) {
             addBalance(sender, randomNomor(20), balance)
@@ -636,7 +652,7 @@ module.exports = async(xinz, msg, smsg, blocked, _afk, welcome) => {
 				})
             }
         }
-
+		   
         switch(command){
             case 'prefix': case 'cekprefix':{
                 textImg(`${prefix}`)
@@ -644,7 +660,7 @@ module.exports = async(xinz, msg, smsg, blocked, _afk, welcome) => {
                 break
             case prefix+'pantun':{
                 if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
-                fetchJson(`https://api.lolhuman.xyz/api/random/pantun?apikey=${lolkey}`)
+                fetchJson(`https://zenzapi.xyz/api/pantun?apikey=ccd7676432e7`)
                 .then((kontlo)=>{
                     textImg(kontlo.result)
                     limitAdd(sender, limit)
@@ -669,7 +685,7 @@ module.exports = async(xinz, msg, smsg, blocked, _afk, welcome) => {
                     },
                     "type": "RESPONSE"
                 }]
-                xinz.sendButtonsLoc(from, `Hai Kak @${sender.split('@')[0]}\n\nSaya NotBot, Bot WhatsApp yg membantu kamu untuk mempermudah sesuatu seperti Membuat Sticker dan Lainnya, Ada Butuh Info Dariku?`, `Note: Kalo kamu pakai wa lama atau mod, dan button ga keliatan, langsung aja ketik ${prefix}allmenu`, qqppp, fs.readFileSync(setting.pathImg), [sender])
+                xinz.sendButtonsLoc(from, `Hai Kak @${sender.split('@')[0]}\n\nSaya bot whatsapp yang dibikin untuk membantu kakak membuat stiker atau lainnya...`, `Note: Kalo kamu pakai wa lama atau mod, dan button ga keliatan, langsung aja ketik ${prefix}allmenu`, qqppp, fs.readFileSync(setting.pathImg), [sender])
                 }
                 break
              case prefix+'allmenu':{
@@ -688,13 +704,13 @@ module.exports = async(xinz, msg, smsg, blocked, _afk, welcome) => {
                     const Limitnya = isPremium ? `UNLIMITED*\n*Expire : ${ms(_prem.getPremiumExpired(sender, premium) - Date.now()).days} day(s) ${ms(_prem.getPremiumExpired(sender, premium) - Date.now()).hours} hour(s) ${ms(_prem.getPremiumExpired(sender, premium) - Date.now()).minutes} minute(s)` : `${getLimit(sender, limitCount, limit)}`
                     var b = xinz.mode
                     let qqppp = [{
-                    "buttonId": `${prefix}sewabot`,
+                    "buttonId": `${prefix}donate`,
                     "buttonText": {
-                        "displayText": "SEWABOT"
+                        "displayText": "Cara dapet premium gratis"
                     },
                     "type": "RESPONSE"
                     }]
-                    xinz.sendButtonsLoc(from, ind.menu(prefix, ucap, pushname, jumlahUser, runtime(process.uptime()), ownerNumber[0].split("@")[0], jumlahHarian, jumlahCommand, sender, time, `*${b.toUpperCase()}*`, levelMenu, xpMenu, reqXp, uangku, role, Limitnya), `Pilih menu dibawah!`, qqppp, await getBuffer(pic), [sender, "0@s.whatsapp.net"]).then((res) =>{
+                    xinz.sendButtonsLoc(from, ind.menu(prefix, ucap, pushname, jumlahUser, runtime(process.uptime()), ownerNumber[0].split("@")[0], jumlahHarian, jumlahCommand, sender, time, `*${b.toUpperCase()}*`, levelMenu, xpMenu, reqXp, uangku, role, Limitnya), `Pilih menu dibawah!`,qqppp, await getBuffer(pic), [sender, "0@s.whatsapp.net"]).then((res) =>{
                     let list = []
                     let listmenu = [`groupmenu`,`menupremi`,`textmenu`,`imagemaker`,`kerangmenu`,`praymenu`,`ownermenu`,`funmenu`,`mediamenu`,`weebsmenu`,`downloader`,`stickermenu`,`primbonmenu`,`levelingmenu`,`about`,`18`,`owner`,`sewabot`]
                     let listmenuu = [`Menu Group`,`Premium Menu`,`TextMaker`,`Image Effect`,`Kerang Menu`,`PrayMenu`,`Owner Command`,`Fun Features`,`Misc and Media`,`Weebs Zone`,`Downloader`,`Sticker Editing`,`Primbon`,`Leveling Xp and Balance`,`About Bot`,`Nsfw Command`,`OwnerBot`,`Rent this Bot`]
@@ -1020,6 +1036,12 @@ module.exports = async(xinz, msg, smsg, blocked, _afk, welcome) => {
                             reply(mess.error.api)
                         })
                     break
+            case prefix+'loli':
+                if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+                reply(mess.wait)
+                xinz.sendMessage(from, { url:`https://leyscoders-api.herokuapp.com/api/loli?apikey=dappakntlll` }, image, { quoted: msg }).catch(() => reply(mess.error.api))
+                limitAdd(sender, limit)
+                break
                 case prefix+'neko':
                     if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
                 if (isGroup && !isNsfw) return reply(ind.notNsfw())
@@ -1619,9 +1641,9 @@ _Silahkan tunggu file media sedang dikirim mungkin butuh beberapa menit_`
                 if (!isPremium) return reply(mess.OnlyPrem)
                 if (args.length > 2) return reply(`Cara penggunaan : ${command} no hp`)
                 if (isNaN(args[1]) && args[1].startsWith('62')) return reply(`Harus berupa angka dan pastikan tidak memasukkan kode negara, contoh: ${command} 8127668234`)
-                fetchJson(`https://api.justaqul.xyz/call?nomor=${args[1]}&apikey=${aqulzkey}`)
+                fetchJson(`https://id.jagreward.com/member/verify-mobile/${q}`)
                 .then((data) => {
-                    textImg(data.result)
+                    textImg(data.message)
                     })
                .catch((err) => {
                             xinz.sendMess(ownerNumber[0], `${command} Error:` + err)
@@ -1977,6 +1999,16 @@ _Silahkan tunggu file media sedang dikirim mungkin butuh beberapa menit_`
                     var wifegerak = ano.split('\n')
                     var wifegerakx = wifegerak[Math.floor(Math.random() * wifegerak.length)]
                     xinz.sendSticker(from, wifegerakx, msg)
+             		limitAdd(sender, limit)
+                    }
+                    break
+                case prefix+'citacita':
+                case prefix+'windahcitacita':{
+                    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+                    var anu = await fetch('https://raw.githubusercontent.com/AlvioAdjiJanuar/citacita/main/citacita.txt')
+                    var wifegerak = anu.split('\n')
+                    var wifegerakx = wifegerak[Math.floor(Math.random() * wifegerak.length)]
+					xinz.sendMessage(from, wifegerakx, audio, { quoted: msg, ptt: true })
              		limitAdd(sender, limit)
                     }
                     break
@@ -2487,6 +2519,44 @@ _Silahkan tunggu file media sedang dikirim mungkin butuh beberapa menit_`
                 limitAdd(sender, limit)
                 })
                 break
+           case prefix+'sertiepep': case prefix+'sertifikatepep': case prefix+'ffserti':
+                if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+                reply(mess.wait)
+                fetchJson(`https://zahirr-web.herokuapp.com/api/maker/special/epep?text=${q}&apikey=zahirgans`)
+                .then((res) =>{
+                xinz.sendMessage(from, { url: res.result.results }, image, { quoted: msg }).catch(() => reply(mess.error.api))
+                limitAdd(sender, limit)
+                })
+                break
+           case prefix+'musimgugur':
+                if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+                reply(mess.wait)
+                fetchJson(`https://leyscoders-api.herokuapp.com/api/textmaker/quotes?q={q}&apikey=dappakntlll`)
+                .then((res) =>{
+                xinz.sendMessage(from, { url: res.result.url }, image, { quoted: msg }).catch(() => reply(mess.error.api))
+                limitAdd(sender, limit)
+                })
+                break
+           case prefix+'ppcouple':
+                if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+                reply(mess.wait)
+                fetchJson(`https://leyscoders-api.herokuapp.com/api/ppcouple?apikey=dappakntlll`)
+                .then((res) =>{
+                xinz.sendMessage(from, { url: res.result.male }, image, { quoted: msg }).catch(() => reply(mess.error.api))
+                xinz.sendMessage(from, { url: res.result.female }, image, { quoted: msg }).catch(() => reply(mess.error.api))
+
+                limitAdd(sender, limit)
+                })
+                break
+           case prefix+'sertiepep':
+                if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+                reply(mess.wait)
+                fetchJson(`https://leyscoders-api.herokuapp.com/api/textmaker/smooke?q=${q}&apikey=dappakntlll`)
+                .then((res) =>{
+                xinz.sendMessage(from, { url: res.result.url }, image, { quoted: msg }).catch(() => reply(mess.error.api))
+                limitAdd(sender, limit)
+                })
+                break
             case prefix+'blackpink': 
             case prefix+'neon':
                 if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
@@ -2500,6 +2570,34 @@ _Silahkan tunggu file media sedang dikirim mungkin butuh beberapa menit_`
                 if (args.length < 2) return reply(`Penggunaan ${command} text`)
                 reply(mess.wait)
                 xinz.sendMessage(from, { url:`https://api.zeks.me/api/gneon?apikey=i61VNcVaNx1ZpahO7Ouq1T2W27A&text=${q}` }, image, { quoted: msg }).catch(() => reply(mess.error.api))
+                limitAdd(sender, limit)
+                break
+            case prefix+'lolimaker':
+                if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+                if (args.length < 2) return reply(`Penggunaan ${command} text`)
+                reply(mess.wait)
+                xinz.sendMessage(from, { url:`https://hardianto-chan.herokuapp.com/api/bot/gfx2?apikey=hardianto&nama=${q}` }, image, { quoted: msg }).catch(() => reply(mess.error.api))
+                limitAdd(sender, limit)
+                break
+            case prefix+'remmaker':
+                if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+                if (args.length < 2) return reply(`Penggunaan ${command} text`)
+                reply(mess.wait)
+                xinz.sendMessage(from, { url:`https://hardianto-chan.herokuapp.com/api/bot/gfx5?apikey=hardianto&text=${q}` }, image, { quoted: msg }).catch(() => reply(mess.error.api))
+                limitAdd(sender, limit)
+                break
+            case prefix+'guramaker':
+                if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+                if (args.length < 2) return reply(`Penggunaan ${command} text`)
+                reply(mess.wait)
+                xinz.sendMessage(from, { url:`https://hardianto-chan.herokuapp.com/api/bot/gura?apikey=hardianto&nama=${q}` }, image, { quoted: msg }).catch(() => reply(mess.error.api))
+                limitAdd(sender, limit)
+                break
+            case prefix+'tokyoghoul':
+                if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+                if (args.length < 2) return reply(`Penggunaan ${command} text`)
+                reply(mess.wait)
+                xinz.sendMessage(from, { url:`https://hardianto-chan.herokuapp.com/api/bot/gfx1?apikey=hardianto&nama=${q}` }, image, { quoted: msg }).catch(() => reply(mess.error.api))
                 limitAdd(sender, limit)
                 break
             case prefix+'glitch': case prefix+'pornhub':
@@ -2522,7 +2620,7 @@ _Silahkan tunggu file media sedang dikirim mungkin butuh beberapa menit_`
                 if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
                 if (args.length < 2) return reply(`Penggunaan ${command} text`)
                 reply(mess.wait)
-                xinz.sendMessage(from, { url:`https://h4ck3rs404-api.herokuapp.com/api/textmaker/senja?text=${q}&theme=coffee-cup&apikey=404Api` }, image, { quoted: msg }).catch(() => reply(mess.error.api))
+                xinz.sendMessage(from, { url:`https://api.olabdev.my.id/api/oxy/coffee?text=${q}&apikey=QZbHlZ3O` }, image, { quoted: msg }).catch(() => reply(mess.error.api))
                 limitAdd(sender, limit)
                 break
             case prefix+'glow':
@@ -2550,7 +2648,7 @@ _Silahkan tunggu file media sedang dikirim mungkin butuh beberapa menit_`
                 if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
                 if (args.length < 2) return reply(`Penggunaan ${command} text`)
                 reply(mess.wait)
-                xinz.sendMessage(from, { url:`https://h4ck3rs404-api.herokuapp.com/api/textmaker/other5?text=${q}&theme=burnpaper&apikey=404Api` }, image, { quoted: msg }).catch(() => reply(mess.error.api))
+                xinz.sendMessage(from, { url:`https://api.olabdev.my.id/api/oxy/paper?text=${q}&apikey=QZbHlZ3O` }, image, { quoted: msg }).catch(() => reply(mess.error.api))
                 limitAdd(sender, limit)
                 break				
             case prefix+'harta': case prefix+'hartatahta': case prefix+'tahta':
@@ -2816,6 +2914,96 @@ _Silahkan tunggu file media sedang dikirim mungkin butuh beberapa menit_`
                    reply(`Kirim/reply gambar atau sticker dengan caption ${command}`)
                 }
                break
+            case prefix+'patrikmaker':
+                if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+                if (isImage || isQuotedImage) {
+                    let encmedia = isQuotedImage ? JSON.parse(JSON.stringify(msg).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo : msg
+                    let yoooo = await xinz.downloadAndSaveMediaMessage(encmedia)
+                    var link = await uptotele(yoooo)
+                    getBuffer(`https://hardianto-chan.herokuapp.com/api/knights/patrick?apikey=hardianto&pp=${link}`)
+                    .then(async(res) =>{
+                    xinz.sendImage(from, res, 'ini', msg)
+                    limitAdd(sender, limit)
+                    })
+                    } else if (isQuotedSticker && !quotedMsg.stickerMessage.isAnimated === true) {
+                    let encmedia = JSON.parse(JSON.stringify(msg).replace('quotedM','m')).message.extendedTextMessage.contextInfo
+                    let yoooo = await xinz.downloadAndSaveMediaMessage(encmedia)
+                    let ran = getRandom('.png')
+				  exec(`ffmpeg -i ${yoooo} ${ran}`, async (err) => {
+						fs.unlinkSync(yoooo)
+						if (err) return reply('Gagal :V')   
+                    var link = await uptotele(ran)
+                    getBuffer(`hhttps://hardianto-chan.herokuapp.com/api/knights/patrick?apikey=hardianto&pp=${link}`)
+                    .then(async(res) =>{
+                    xinz.sendImage(from, res, 'ini', msg)
+                    limitAdd(sender, limit)
+                    fs.unlinkSync(ran)
+                    })
+               })
+                 } else {
+                   reply(`Kirim/reply gambar atau sticker dengan caption ${command}`)
+                }
+					break
+            case prefix+'hacker':
+                if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+                if (isImage || isQuotedImage) {
+                    let encmedia = isQuotedImage ? JSON.parse(JSON.stringify(msg).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo : msg
+                    let yoooo = await xinz.downloadAndSaveMediaMessage(encmedia)
+                    var link = await uptotele(yoooo)
+                    getBuffer(`https://hardianto-chan.herokuapp.com/api/beta/hacker2?apikey=hardianto&pp=${link}`)
+                    .then(async(res) =>{
+                    xinz.sendImage(from, res, 'ini', msg)
+                    limitAdd(sender, limit)
+                    })
+                    } else if (isQuotedSticker && !quotedMsg.stickerMessage.isAnimated === true) {
+                    let encmedia = JSON.parse(JSON.stringify(msg).replace('quotedM','m')).message.extendedTextMessage.contextInfo
+                    let yoooo = await xinz.downloadAndSaveMediaMessage(encmedia)
+                    let ran = getRandom('.png')
+				  exec(`ffmpeg -i ${yoooo} ${ran}`, async (err) => {
+						fs.unlinkSync(yoooo)
+						if (err) return reply('Gagal :V')   
+                    var link = await uptotele(ran)
+                    getBuffer(`https://hardianto-chan.herokuapp.com/api/knights/patrick?apikey=hardianto&pp=${link}`)
+                    .then(async(res) =>{
+                    xinz.sendImage(from, res, 'ini', msg)
+                    limitAdd(sender, limit)
+                    fs.unlinkSync(ran)
+                    })
+               })
+                 } else {
+                   reply(`Kirim/reply gambar atau sticker dengan caption ${command}`)
+                }
+					break
+            case prefix+'spongebobmaker':
+                if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+                if (isImage || isQuotedImage) {
+                    let encmedia = isQuotedImage ? JSON.parse(JSON.stringify(msg).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo : msg
+                    let yoooo = await xinz.downloadAndSaveMediaMessage(encmedia)
+                    var link = await uptotele(yoooo)
+                    getBuffer(`https://hardianto-chan.herokuapp.com/api/knights/spongebob?apikey=hardianto&pp=${link}`)
+                    .then(async(res) =>{
+                    xinz.sendImage(from, res, 'ini', msg)
+                    limitAdd(sender, limit)
+                    })
+                    } else if (isQuotedSticker && !quotedMsg.stickerMessage.isAnimated === true) {
+                    let encmedia = JSON.parse(JSON.stringify(msg).replace('quotedM','m')).message.extendedTextMessage.contextInfo
+                    let yoooo = await xinz.downloadAndSaveMediaMessage(encmedia)
+                    let ran = getRandom('.png')
+				  exec(`ffmpeg -i ${yoooo} ${ran}`, async (err) => {
+						fs.unlinkSync(yoooo)
+						if (err) return reply('Gagal :V')   
+                    var link = await uptotele(ran)
+                    getBuffer(`https://hardianto-chan.herokuapp.com/api/knights/patrick?apikey=hardianto&pp=${link}`)
+                    .then(async(res) =>{
+                    xinz.sendImage(from, res, 'ini', msg)
+                    limitAdd(sender, limit)
+                    fs.unlinkSync(ran)
+                    })
+               })
+                 } else {
+                   reply(`Kirim/reply gambar atau sticker dengan caption ${command}`)
+                }
+					break
             case prefix+'blurpify':
                 if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
                 if (isImage || isQuotedImage) {
@@ -3396,7 +3584,7 @@ Alert!!! : ${res.desc}`))
                     break
             case prefix+'fact': case prefix+'fakta': case prefix+'faktaunik':
                 if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
-                fetchJson('https://api.lolhuman.xyz/api/random/faktaunik?apikey=' + lolkey)
+                fetchJson(`https://zenzapi.xyz/api/faktaunik?apikey=ccd7676432e7`)
                 .then((kontlo)=>{
                     textImg(kontlo.result)
                     limitAdd(sender, limit)
@@ -3406,11 +3594,29 @@ Alert!!! : ${res.desc}`))
                             reply(mess.error.api)
                         })
                 break
-            case prefix+'bucin': case prefix+'katabijak':
+            case prefix+'sindiran':
                 if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
-                fetchJson('https://api.lolhuman.xyz/api/random/' + command.split(prefix)[1] + '?apikey=' + lolkey)
+                reply(mess.wait)
+                fetchJson(`https://leyscoders-api.herokuapp.com/api/skak?apikey=dappakntlll`)
+                .then((res) =>{
+                textImg(res.result)
+                limitAdd(sender, limit)
+                })
+                break
+            case prefix+'katailham':
+                if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+                reply(mess.wait)
+                fetchJson(`https://leyscoders-api.herokuapp.com/api/katailham?apikey=dappakntlll`)
+                .then((res) =>{
+                textImg(res.result)
+                limitAdd(sender, limit)
+                })
+                break
+            case prefix+'katabijak':
+                if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+                fetchJson(`https://zenzapi.xyz/api/motivasi?apikey=ccd7676432e7`)
                 .then((kontlo)=>{
-                    textImg(kontlo.result)
+                    textImg(kontlo.result.message)
                     limitAdd(sender, limit)
                 })
                  .catch((err) => {
@@ -3420,9 +3626,21 @@ Alert!!! : ${res.desc}`))
                 break
             case prefix+'quote': case prefix+'quotes':
                 if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
-                fetchJson('https://api.lolhuman.xyz/api/random/quotes?apikey=' + lolkey)
+                fetchJson(`https://zenzapi.xyz/api/random/quote?apikey=ccd7676432e7`)
                 .then((kontlo)=>{
                     textImg(`_${kontlo.result.quote}_\n\n―${kontlo.result.by}`)
+                    limitAdd(sender, limit)
+                })
+                 .catch((err) => {
+                            xinz.sendMess(ownerNumber[0], `${command} Error:` + err)
+                            reply(mess.error.api)
+                        })
+                break
+            case prefix+'bucinquote': case prefix+'bucin':
+                if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+                fetchJson(`https://zenzapi.xyz/api/bucinquote?apikey=ccd7676432e7`)
+                .then((kontlo)=>{
+                    textImg(`_${kontlo.result.message}_`)
                     limitAdd(sender, limit)
                 })
                  .catch((err) => {
@@ -3473,15 +3691,14 @@ Alert!!! : ${res.desc}`))
                 break
             case prefix+'news': case prefix+'berita':
                 if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
-                fetchJson('https://api.lolhuman.xyz/api/newsinfo?apikey=' + lolkey)
+                fetchJson(`https://zenzapi.xyz/api/inews?apikey=ccd7676432e7`)
                 .then((kontlo)=>{
                     let ini_txt = 'Berita Hari ini :\n\n'
                     for (let x of kontlo.result){
-                    ini_txt += `*${x.title}*\n\n`
-                    ini_txt += `${x.content}\n\n`
-                    ini_txt += `Sumber: ${x.source.name}\n`
-                    ini_txt += `Publish : ${x.publishedAt}\n`
-                    ini_txt += `Selengkapnya : ${x.url}\n\n`
+                    ini_txt += `*${x.berita}*\n\n`
+                    ini_txt += `Jenis Berita: ${x.berita_jenis}\n`
+                    ini_txt += `Publish : ${x.berita_diupload}\n`
+                    ini_txt += `Selengkapnya : ${x.berita_url}\n\n`
                     }
                     xinz.sendFileFromUrl(from, kontlo.result[0].urlToImage, ini_txt, msg)
                     limitAdd(sender, limit)
@@ -3832,7 +4049,7 @@ Alert!!! : ${res.desc}`))
                 }
                 break
             case prefix+'sourcecode': case prefix+'sc': case prefix+'src':
-                textImg(`Bot ini menggunakan sc : https://github.com/rashidsiregar28/chika-bot`)
+                textImg(`Bot ini menggunakan sc : xinz`)
                 break
             case prefix+'donate':
             case prefix+'donasi':
@@ -3958,6 +4175,7 @@ Alert!!! : ${res.desc}`))
                   }
                     break
                 case prefix+'leaveall':{
+                if (!isOwner) return reply(mess.OnlyOwner)
                 let totalchat = await xinz.chats.all()
 				let i = []
 				for (let mem of totalchat){
@@ -4232,6 +4450,37 @@ _Silahkan tunggu file media sedang dikirim mungkin butuh beberapa menit_`
                 }
             }
                 break
+            case prefix+'tiktok':
+                if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+                if (args.length < 2) return reply(`Kirim perintah *${prefix}tiktok* link`)
+                fetchJson(`https://zenzapi.xyz/api/downloader/tiktok?url=${args[1]}&apikey=ccd7676432e7`)
+                .then((res) =>{
+                let qqpp = [{
+                    "buttonId": `${prefix}sendfile ${res.result.watermark}`,
+                    "buttonText": {
+                        "displayText": "WITH WM"
+                    },
+                    "type": "RESPONSE"
+                },{
+                    "buttonId": `${prefix}sendfile ${res.result.nowatermark}`,
+                    "buttonText": {
+                        "displayText": "NO WM"
+                    },
+                    "type": "RESPONSE"
+                },{
+                    "buttonId": `${prefix}sendfile ${res.result.audio}`,
+                    "buttonText": {
+                        "displayText": "AUDIO"
+                    },
+                    "type": "RESPONSE"
+                }]
+                xinz.sendButtons(from, `Hai Kak @${sender.split('@')[0]}`, `tiktok Downloader`, `Mau no wm,noWM atau audio?`, qqpp, false, null, [sender])
+                 })
+                .catch((err) => {
+                            xinz.sendMess(ownerNumber[0], `${command} Error:` + err)
+                            reply(mess.error.api)
+                        })
+                break
             case prefix+'igstory':
                 if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
                 if (args.length < 2) return reply(`Kirim perintah *${command}* _query_`)
@@ -4318,36 +4567,16 @@ _Silahkan tunggu file media sedang dikirim mungkin butuh beberapa menit_`
                 break
             case prefix+'ig':
             case prefix+'igdl':
-            case prefix+'instagram':{
+            case prefix+'instagram':
                 if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
                 if (args.length < 2) return reply(`Kirim perintah *${prefix}ig* link ig`)
                 if (!isUrl(args[1]) && !args[1].includes('instagram.com')) return reply(mess.error.Iv)
                 reply(mess.wait)
-                getPost(args[1].split('/')[4])
+                fetchJson(`https://zenzapi.xyz/api/downloader/instagram?url=${args[1]}&apikey=ccd7676432e7`)
                 .then((res) => {
-                    let { owner_user, post, date, capt } = res
-                    let caption = `┏┉⌣ ┈̥-̶̯͡..̷̴✽̶┄┈┈┈┈┈┈┈┈┈┈┉┓
-┆ *INSTAGRAM MEDIA*
-└┈┈┈┈┈┈┈┈┈┈┈⌣ ┈̥-̶̯͡..̷̴✽̶⌣ ✽̶
-
-*Data Berhasil Didapatkan!*
-\`\`\`▢ Owner : ${owner_user}\`\`\`
-\`\`\`▢ Jumlah Media : ${post.length}\`\`\`
-\`\`\`▢ Caption :${capt}\`\`\`
-
-_Harap tunggu sebentar, media akan segera dikirim_`
-                    xinz.sendMess(from, caption)
-                    for (let i = 0; i < post.length; i++){
-                        xinz.sendFileFromUrl(from, post[i].url)
-                    }
+                        xinz.sendFileFromUrl(from, `${res.result.url}`)
                     limitAdd(sender, limit)
                 })
-                .catch((err) => {
-                    xinz.sendMess(ownerNumber[0], 'IG Download Error : ' + err)
-                    console.log(color('[IG Download]', 'red'), err)
-                    reply(mess.error.api)
-                })
-            }
                 break
             case prefix+'fb':
             case prefix+'fbdl':
